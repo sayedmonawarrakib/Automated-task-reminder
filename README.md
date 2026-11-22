@@ -12,8 +12,10 @@ The main goal of this project is to understand workflow automation, webhook inte
 
 <img width="987" height="590" alt="Screenshot 2026-11-22 122609" src="https://github.com/user-attachments/assets/2e7ce4a1-e402-4468-9ff9-80d13a46d9c2" />
 Automation workflow ⬆️
+
 <img width="559" height="267" alt="Screenshot 2026-11-22 123509" src="https://github.com/user-attachments/assets/8761e706-3dfd-438c-8ca3-c4cf54cb99b0" />
 Google Sheet ⬆️
+
 <img width="824" height="899" alt="Screenshot 2026-11-22 140259" src="https://github.com/user-attachments/assets/a60e9d2c-a730-4d8d-ac13-e87443480421" />
 Telegram Message ⬆️
 
