@@ -8,6 +8,16 @@ The Telegram Notification Bot automates the process of receiving and delivering 
 
 The main goal of this project is to understand workflow automation, webhook integration, API connections, and real-time notifications using n8n.
 
+## 🖼️ Screenshot of the Project:
+
+<img width="987" height="590" alt="Screenshot 2026-11-22 122609" src="https://github.com/user-attachments/assets/2e7ce4a1-e402-4468-9ff9-80d13a46d9c2" />
+Automation workflow ⬆️
+<img width="559" height="267" alt="Screenshot 2026-11-22 123509" src="https://github.com/user-attachments/assets/8761e706-3dfd-438c-8ca3-c4cf54cb99b0" />
+Google Sheet ⬆️
+<img width="824" height="899" alt="Screenshot 2026-11-22 140259" src="https://github.com/user-attachments/assets/a60e9d2c-a730-4d8d-ac13-e87443480421" />
+Telegram Message ⬆️
+
+
 ## ⚙️ Workflow Architecture
 
 ```text
@@ -189,7 +199,7 @@ Through this project, I practised:
 
 Computer Science & Technology | Automation Enthusiast
 
-GitHub: [Add your GitHub profile URL]
+GitHub: www.https://github.com/sayedmonawarrakib
 
 ## 📄 License
 
