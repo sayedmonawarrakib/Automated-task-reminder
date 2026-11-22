@@ -1,0 +1,144 @@
+{
+  "name": "Daily Task Reminder Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -176,
+        -128
+      ],
+      "id": "bf49f6eb-01a3-409c-9640-14a98012c41c",
+      "name": "Schedule Trigger",
+      "alwaysOutputData": false,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1-mthjbjm7RaUlJCimjuImazXED1iH8mM2fcTZHQ1dxU",
+          "mode": "list",
+          "cachedResultName": "Daily Task Manager",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-mthjbjm7RaUlJCimjuImazXED1iH8mM2fcTZHQ1dxU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tasks",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-mthjbjm7RaUlJCimjuImazXED1iH8mM2fcTZHQ1dxU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        48,
+        -128
+      ],
+      "id": "d630b391-c6bb-4291-9822-7843260b1c64",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AFCvK0lOYkrFhWoZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst tasks = $input.all().map(item => item.json);\n\n// Get today's date in Bangladesh\nconst today = new Intl.DateTimeFormat('en-CA', {\n  timeZone: 'Asia/Dhaka',\n  year: 'numeric',\n  month: '2-digit',\n  day: '2-digit'\n}).format(new Date());\n\n// Find pending or in-progress tasks\n// that are due today or overdue\nconst pendingTasks = tasks.filter(task => {\n  const status = String(task.status || '').toLowerCase().trim();\n  const dueDate = String(task.due_date || '').trim();\n\n  return (\n    ['pending', 'in progress'].includes(status) &&\n    /^\\d{4}-\\d{2}-\\d{2}$/.test(dueDate) &&\n    dueDate <= today\n  );\n});\n\n// Prepare Telegram message\nlet message = `📅 DAILY TASK REMINDER\\n`;\nmessage += `━━━━━━━━━━━━━━━━━━\\n`;\nmessage += `📆 Date: ${today}\\n\\n`;\n\nif (pendingTasks.length === 0) {\n  message += `🎉 Great! No pending or overdue tasks for today.\\n`;\n} else {\n  message += `You have ${pendingTasks.length} task(s) to complete:\\n\\n`;\n\n  pendingTasks.forEach((task, index) => {\n    const overdue = task.due_date < today;\n\n    message += `${index + 1}. ${task.task_name}\\n`;\n    message += `   🎯 Priority: ${task.priority || 'Normal'}\\n`;\n    message += `   📌 Status: ${task.status}\\n`;\n    message += overdue\n      ? `   ⚠️ OVERDUE: ${task.due_date}\\n\\n`\n      : `   📅 Due: ${task.due_date}\\n\\n`;\n  });\n}\n\nmessage += `━━━━━━━━━━━━━━━━━━\\n`;\nmessage += `💪 Stay focused and complete your tasks!`;\n\nreturn [\n  {\n    json: {\n      message,\n      task_count: pendingTasks.length,\n      date: today\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        272,
+        -128
+      ],
+      "id": "4a4222b4-c284-4688-a85f-2a1954174963",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "chatId": "=8224891019",
+        "text": "={{ $json.message }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        496,
+        -128
+      ],
+      "id": "2ee49b14-ae80-46a2-b34a-c245e480ab3c",
+      "name": "Send a text message",
+      "webhookId": "670bc2b1-54a8-4368-b57d-184ef975f7eb",
+      "credentials": {
+        "telegramApi": {
+          "id": "RAAHHkCp76aB3UBQ",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2ef986bd-05e9-4aa0-8900-369be57e6b7a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a9ce9eea103e5087bab0ac611f60bf797a172df2e0543b7cd54af9f8d164b63c"
+  },
+  "nodeGroups": [],
+  "id": "sw24oV5cPAiOseGw",
+  "tags": []
+}
